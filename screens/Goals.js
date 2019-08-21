@@ -14,7 +14,12 @@ import { Ionicons } from '@expo/vector-icons';
 import GoalView from "./GoalView";
 
 class Goals extends React.Component {
-    
+    static navigationOptions = {
+        
+        title: 'Goals',
+        header: null
+
+    };
     constructor(props) {
         super(props);
         this.state = {
@@ -32,6 +37,7 @@ class Goals extends React.Component {
                 })
             })
             .catch(error => console.log(error)) //to catch the errors if any
+           
     }
     FlatListItemSeparator = () => {
         return (
@@ -43,8 +49,9 @@ class Goals extends React.Component {
             />
         );
     }
+
     renderItem = (data) =>
-        <TouchableOpacity style={styles.list} onPress={()=>this.props.navigation.navigate('GView')}>
+        <TouchableOpacity style={styles.list} onPress={()=>this.props.navigation.navigate('GView',{gtitle:data.item.title,start:data.item.starttarget,end:data.item.endtarget})} >
             <Text style={styles.titletext}>{data.item.title})}
 </Text>
             <Text style={styles.valueText}>{"Saving"}   {data.item.starttarget}{"/"}{data.item.endtarget} {"                  "}
@@ -60,6 +67,7 @@ class Goals extends React.Component {
         }
         return (
             <View style={styles.container}>
+               
                 <FlatList
                     data={this.state.dataSource}
                     ItemSeparatorComponent={this.FlatListItemSeparator}
@@ -77,10 +85,17 @@ class Goals extends React.Component {
 
 
 const GoalNavigator = createStackNavigator({
-    Goal: Goals,
-    GView: GoalView
-  },
-  { headerMode: 'none' 
+    Goal: {
+        screen: Goals
+    },
+    GView:{
+        screen:GoalView,
+        navigationOptions: ({navigation}) => ({ header: false }),
+    } 
+  
+},{
+    headerMode: 'screen',
+    headerVisible :false
 });
 
 const GoalContainer = createAppContainer(GoalNavigator);
